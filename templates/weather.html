@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>Weather</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <h1>Weather Info</h1>
+    <ul>
+      <li>Temperature: {{ main.temp }} ºK</li>
+      <li>Pressure: {{ main.pressure }}</li>
+      <li>Humidity: {{ main.humidity }}</li>
+      <li>Min: {{ main.temp_min }}</li>
+      <li>Max: {{ main.temp_max }}</li>
+    </ul>
+  </body>
+</html>
