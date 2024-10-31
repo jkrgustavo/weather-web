@@ -26,10 +26,15 @@ async fn coord_handler(
 async fn weather_handler(
     Path(city): Path<String>,
     State(pool): State<Pool<Postgres>>
-) -> Result<WeatherRespose> { //Result<Json<Main>> 
+) -> Result<WeatherDisplay> {  //Result<Json<Main>> {
     println!("->> {:<12} Weather Handler", "HANDLER");
 
     let weather = fetch_weather(&city, &pool).await?;
+
+    let display = WeatherDisplay {
+        main: weather,
+        name: city,
+    };
     
-    Ok(WeatherRespose { main: weather })
+    Ok(display)
 }

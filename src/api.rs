@@ -13,8 +13,7 @@ pub struct GeoResponse {
     pub lon: f64,
 }
 
-#[derive(Template, Deserialize, Serialize, Debug, Clone)]
-#[template(path = "weather.html")]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct WeatherRespose {
     pub main: Main
 }
@@ -26,6 +25,13 @@ pub struct Main {
     pub humidity: f64,
     pub temp_min: f64,
     pub temp_max: f64,
+}
+
+#[derive(Template, Debug, Clone)]
+#[template(path = "weather.html")]
+pub struct WeatherDisplay {
+    pub main: Main,
+    pub name: String
 }
 
 async fn fetch_coords(city: &String) -> Result<GeoResponse> {
@@ -67,7 +73,8 @@ pub async fn get_coords(city: &String, pool: &Pool<Postgres>) -> Result<GeoRespo
 
     Ok(coords)
 }
-
+// htf 37
+// ender gie
 pub async fn fetch_weather(city: &String, pool: &Pool<Postgres>) -> Result<Main> {
     let coords = get_coords(city, pool).await?;
     let endpoint = format!(
@@ -75,6 +82,7 @@ pub async fn fetch_weather(city: &String, pool: &Pool<Postgres>) -> Result<Main>
         coords.lat,
         coords.lon,
     );
+    
     let res: WeatherRespose = get(&endpoint).await?.json().await?;
-    Ok(res.main.clone())
+    Ok(res.main)
 }

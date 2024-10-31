@@ -1,17 +1,19 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <title>Current Weather!!</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="css/style.css" rel="stylesheet" />
-  </head>
-  <body>
-    <h1>The Weather!!</h1>
-    <form action="/foo" method="post">
-      <label for="city">Enter a US city</label>
-      <input type="text" name="city" id="city" />
-      <button type="submit">check weather</button>
-    </form>
-  </body>
-</html>
+{% extends "base.html" %} 
+
+{% block title %}Weather{% endblock %} 
+
+{% block content %}
+<div id="parent-div" class="ml-4">
+  <h1 class="text-xl">Enter a city in the US</h1>
+  <form hx-post="/foo" hx-target="#comorbidititties" hx-swap="beforebegin">
+    <label for="city"></label>
+    <input type="text" name="city" id="city" class="border rounded p-1 border-gray-300 focus:border-blue-400 focus:outline-none focus:ring focus:ring-blue-200">
+    <button type="submit" class="bg-green-300 rounded p-1 border border-black mt-4"> check weather</button>
+  </form>
+    <div id="comorbidititties">
+
+    </div>
+  <button hx-target="#content" hx-get="/" hx-swap="outerHTML" class="bg-red-400 rounded p-1 border border-black mt-4 ml-3">clear</button>
+</div>
+
+{% endblock %}

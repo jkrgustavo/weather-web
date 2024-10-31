@@ -10,6 +10,7 @@ use error::Result;
 use sqlx::PgPool;
 use askama::{ Template };
 use serde::Deserialize;
+use tower_http::services::ServeDir;
 
 
 #[derive(Template)]
@@ -24,6 +25,7 @@ struct CityForm {
 #[tokio::main]
 async fn main() -> Result<()> {
     dotenv::dotenv().ok();
+    let assets_path = std::env::current_dir().unwrap();
     let database_url = std::env::var("DATABASE_URL").expect("Couldn't find the db url");
     let db_pool = PgPool::connect(&database_url)
         .await?;
@@ -31,7 +33,8 @@ async fn main() -> Result<()> {
     let main_router = Router::new()
         .route("/", get(|| async { Index {} }))
         .route("/foo", post(redirect_handler))
-        .merge(web::weather_routes::weather_routes(db_pool));
+        .merge(web::weather_routes::weather_routes(db_pool))
+        .nest_service("/assets", ServeDir::new(format!("{}/assets", assets_path.to_str().unwrap())));
 
     let addr = SocketAddr::from(([127, 0, 0, 1], 8080));
     println!("->> LISTENING on {}", addr);
