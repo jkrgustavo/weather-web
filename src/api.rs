@@ -35,11 +35,12 @@ pub struct WeatherDisplay {
 }
 
 async fn fetch_coords(city: &String) -> Result<GeoResponse> {
+    let key = std::env::var("OPENWEATHER_API_KEY").expect("Couldn't find the openweather api key");
     let endpoint = format!(
         "http://api.openweathermap.org/geo/1.0/direct?q={}&limit={}&appid={}", 
         city, 
         "1", 
-        "94f2b6872c062c489c8f0e75a03ccc5a"
+        key
     );
     let res: Vec<GeoResponse> = get(&endpoint).await?.json().await?;
     Ok(res
@@ -73,14 +74,16 @@ pub async fn get_coords(city: &String, pool: &Pool<Postgres>) -> Result<GeoRespo
 
     Ok(coords)
 }
-// htf 37
-// ender gie
+
 pub async fn fetch_weather(city: &String, pool: &Pool<Postgres>) -> Result<Main> {
     let coords = get_coords(city, pool).await?;
+    let key = std::env::var("OPENWEATHER_API_KEY").expect("Couldn't find the openweather api key");
+
     let endpoint = format!(
-        "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid=94f2b6872c062c489c8f0e75a03ccc5a",
+        "https://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}",
         coords.lat,
         coords.lon,
+        key
     );
     
     let res: WeatherRespose = get(&endpoint).await?.json().await?;
